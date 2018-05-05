@@ -1,7 +1,7 @@
 <!--pages/editor/editor.wxml-->
 <view id="toolsbar">
-  <view id="more-option"></view>
-  <view id="change-model" bindtap="changeModel"></view>
+  <view id="more-option" bindtap="moreMenu"></view>
+  <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
 </view>
 <view id="editorarea" wx:if="{{isEditor}}">
   <textarea id="textarea" maxlength="10000" value="{{context}}" bindinput="getValue"></textarea>

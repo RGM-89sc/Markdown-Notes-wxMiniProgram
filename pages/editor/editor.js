@@ -2,8 +2,16 @@
 var marked = require("../../utils/marked.js");
 
 function htmltowxml(htmlString) {
-  var re = /<([a-z]+)>/g;
-
+  var re_matchTags = /<.+>.*<.+>/gi,
+    re_matchTagAttr = /(?:<([a-z0-9]+)(?: ([a-z]+)="(.*)")*>(.*)<\/.+>)/i;  //不能有全局g标志，因为正则里的lastIndex属性
+  
+  var htmltags = htmlString.match(re_matchTags);
+  
+  var wxmlformatarr = [];
+  htmltags.forEach(function(value, index, array){
+    wxmlformatarr.push(re_matchTagAttr.exec(value));
+  });
+  return wxmlformatarr;
 };
 
 Page({
@@ -14,41 +22,7 @@ Page({
   data: {
     isEditor: false,
     context: "",
-    markdownFormat: [{
-      tag: "h1",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "h2",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "h3",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "h4",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "h5",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "h6",
-      text: "123",
-      src: null
-    },
-    {
-      tag: "p",
-      text: "123",
-      src: null
-    }]
+    markdownFormat: []
   },
 
   /**
@@ -57,7 +31,7 @@ Page({
   onLoad: function (options) {
     this.setData({
       isEditor: true,
-      context: "## 123"
+      context: "# 此处为一级标题"
     });
   },
 
@@ -115,7 +89,6 @@ Page({
     this.setData({
       context: event.detail.value
     });
-    console.log(this.data.context);
   },
 
   changeModel: function(event){
@@ -125,9 +98,21 @@ Page({
     });
 
     if(this.data.isEditor){
-      var htmlString = marked(this.data.context);
-      console.log(htmlString);
-      htmltowxml(htmlString);
+      var htmlString = marked(this.data.context),
+        wxmlformatarr = htmltowxml(htmlString);
+
+      var format = [];
+      wxmlformatarr.forEach(function(value, index, array){
+        format.push({
+          tag: value[1],
+          text: value[value.length - 1],
+          src: null
+        })
+      });
+
+      this.setData({
+        markdownFormat: format
+      });
     }
 
     this.setData({
@@ -135,5 +120,9 @@ Page({
     });
 
     wx.hideLoading();
+  },
+
+  moreMenu: function(event){
+    
   }
 })
