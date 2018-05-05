@@ -2,14 +2,17 @@
 var marked = require("../../utils/marked.js");
 
 function htmltowxml(htmlString) {
-  var re_matchTags = /<.+>.*<.+>/gi,
-    re_matchTagAttr = /(?:<([a-z0-9]+)(?: ([a-z]+)="(.*)")*>(.*)<\/.+>)/i;  //不能有全局g标志，因为正则里的lastIndex属性
+  var re_matchTags = /<([a-z0-9]+)(?: .*)*>[^]*?<\/\1>/gi,
+    re_matchTagAttr = /(?:<([a-z0-9]+)(?: ([a-z]+)="(.*)")*>([^]*?)<\/\1>)/im;  // 没有加全局g标志，因为正则里的lastIndex属性
   
-  var htmltags = htmlString.match(re_matchTags);
+  var htmltags = htmlString.match(re_matchTags);  // 先匹配出所有html标签
+  console.log(htmltags);
   
   var wxmlformatarr = [];
   htmltags.forEach(function(value, index, array){
-    wxmlformatarr.push(re_matchTagAttr.exec(value));
+    console.log("每个标签:" + value);
+    console.log(re_matchTagAttr.exec(value));
+    wxmlformatarr.push(re_matchTagAttr.exec(value));  // 获取每个html标签中的属性
   });
   return wxmlformatarr;
 };
@@ -89,6 +92,7 @@ Page({
     this.setData({
       context: event.detail.value
     });
+    console.log(event.detail.value);
   },
 
   changeModel: function(event){
@@ -98,8 +102,10 @@ Page({
     });
 
     if(this.data.isEditor){
-      var htmlString = marked(this.data.context),
-        wxmlformatarr = htmltowxml(htmlString);
+      var htmlString = marked(this.data.context);
+      console.log("转成html:" + htmlString);
+
+      var wxmlformatarr = htmltowxml(htmlString);
 
       var format = [];
       wxmlformatarr.forEach(function(value, index, array){

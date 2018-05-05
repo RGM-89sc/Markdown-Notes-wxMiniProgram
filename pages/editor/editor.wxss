@@ -7,6 +7,7 @@
   overflow: hidden;
   border-top: 1rpx solid #eee;
   box-shadow: 0 0 10rpx 0 #aaa;
+  background-color: white;
 }
 
 #more-option{
@@ -50,6 +51,9 @@
   background-color: rgb(245, 245, 245);
 }
 
+#viewarea{
+  height: 100% !important;
+}
 
 /** 仿html样式部分开始 **/
 
