@@ -2,6 +2,7 @@
 var marked = require("../../utils/marked.js");
 
 function htmltowxml(htmlString) {
+<<<<<<< HEAD
   var re_matchTags = /<([a-z0-9]+)(?: .*)*>[^]*?<\/\1>/gi,
     re_matchTagAttr = /(?:<([a-z0-9]+)(?: ([a-z]+)="(.*)")*>([^]*?)<\/\1>)/im;  // 没有加全局g标志，因为正则里的lastIndex属性
   
@@ -15,6 +16,10 @@ function htmltowxml(htmlString) {
     wxmlformatarr.push(re_matchTagAttr.exec(value));  // 获取每个html标签中的属性
   });
   return wxmlformatarr;
+=======
+  var re = /<([a-z]+)>/g;
+
+>>>>>>> parent of 92f634f... 已支持h1-h6、p标签的向wxml解析及渲染
 };
 
 Page({
@@ -25,7 +30,41 @@ Page({
   data: {
     isEditor: false,
     context: "",
-    markdownFormat: []
+    markdownFormat: [{
+      tag: "h1",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "h2",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "h3",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "h4",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "h5",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "h6",
+      text: "123",
+      src: null
+    },
+    {
+      tag: "p",
+      text: "123",
+      src: null
+    }]
   },
 
   /**
@@ -34,7 +73,7 @@ Page({
   onLoad: function (options) {
     this.setData({
       isEditor: true,
-      context: "# 此处为一级标题"
+      context: "## 123"
     });
   },
 
@@ -92,7 +131,11 @@ Page({
     this.setData({
       context: event.detail.value
     });
+<<<<<<< HEAD
     console.log(event.detail.value);
+=======
+    console.log(this.data.context);
+>>>>>>> parent of 92f634f... 已支持h1-h6、p标签的向wxml解析及渲染
   },
 
   changeModel: function(event){
@@ -103,6 +146,7 @@ Page({
 
     if(this.data.isEditor){
       var htmlString = marked(this.data.context);
+<<<<<<< HEAD
       console.log("转成html:" + htmlString);
 
       var wxmlformatarr = htmltowxml(htmlString);
@@ -119,6 +163,10 @@ Page({
       this.setData({
         markdownFormat: format
       });
+=======
+      console.log(htmlString);
+      htmltowxml(htmlString);
+>>>>>>> parent of 92f634f... 已支持h1-h6、p标签的向wxml解析及渲染
     }
 
     this.setData({
@@ -126,9 +174,5 @@ Page({
     });
 
     wx.hideLoading();
-  },
-
-  moreMenu: function(event){
-    
   }
 })
