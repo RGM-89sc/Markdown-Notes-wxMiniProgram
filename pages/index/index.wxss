@@ -1,0 +1,108 @@
+/**index.wxss**/
+
+/** 用户信息部分开始 **/
+.userinfo {
+  padding: 10rpx;
+  text-align: center;
+}
+/* 用户头像 */
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+/* 用户昵称 */
+.userinfo-nickname {
+  display: block;
+  color: #aaa;
+}
+/** 用户信息部分结束 **/
+
+/*** 文章列表和新建文章部分开始 ***/
+/* 整个选项卡区域 */
+.tap-area{
+  padding: 20rpx;
+}
+/* 选项卡 */
+.tap{
+  display: table;
+  width: 100%;
+  text-align: center; 
+  border: 2rpx solid #eee;
+  border-radius: 20rpx;
+}
+/* 选项卡内容 */
+.my-article, .new-article{
+  display: table-cell;
+  padding: 10rpx;
+}
+/* 选项卡的展示 */
+.hover{
+  background-color: #eee;
+}
+/* 选项卡内容区域的隐藏 */
+.hidden{
+  display: none !important;
+}
+
+/** 我的文章部分开始 **/
+/* 我的文章选项卡区域 */
+.my-article-area{
+  display: block;
+}
+/* 文章post */
+.article{
+  margin: 20rpx 0;
+  padding: 0 20rpx;
+  min-height: 110rpx;
+  border-bottom: 1rpx solid #ddd;
+}
+/* 文章post的文章标题 */
+.article-title{
+  font-size: 50rpx;
+  line-height: 50rpx;
+}
+/* 文章post的文章创建时间 */
+.article-date{
+  height: 30rpx;
+  font-size: 30rpx;
+  line-height: 30rpx;
+}
+/** 我的文章部分结束 **/
+
+/** 新建文章部分开始 **/
+/* 新建文章选项卡区域 */
+.new-article-area{
+  display: block;
+}
+/* 新建文章中的label */
+.new-title{
+  display: inline-block;
+  padding: 20rpx 0;
+}
+/* 标题的输入框 */
+.new-title-input{
+  position: relative;
+  padding: 10rpx 80rpx 10rpx 10rpx;
+  border-bottom: 1rpx solid #ddd;
+}
+/* 输入标题剩下的可用字数 */
+.len{
+  position: absolute;
+  bottom: 5rpx;
+  right: 30rpx;
+  font-size: 30rpx;
+  color: #ddd;
+}
+/* 确认按钮 */
+.new{
+  margin-top: 40rpx;
+}
+/* 没有文章时的文字的容器 */
+.no-article{
+  margin-top: 20rpx;
+  text-align: center;
+}
+/** 新建文章部分结束 **/
+/*** 文章列表和新建文章部分结束 ***/

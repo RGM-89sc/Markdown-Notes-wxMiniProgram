@@ -1,0 +1,45 @@
+<!--pages/editor/editor.wxml-->
+<view id="toolsbar">
+  <view id="more-option" bindtap="moreMenu"></view>
+  <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
+</view>
+<view id="editorarea" wx:if="{{isEditor}}">
+  <textarea id="textarea" maxlength="10000" value="{{context}}" bindinput="getValue"></textarea>
+</view>
+<view id="viewarea" wx:else>
+  <view wx:for="{{markdownFormat}}" wx:for-item="module" wx:key="tag">
+
+    <view wx:if="{{module.tag === 'h1'}}" class="h1-view">
+      <text class="h1">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'h2'}}" class="h2-view">
+      <text class="h2">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'h3'}}" class="h3-view">
+      <text class="h3">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'h4'}}" class="h4-view">
+      <text class="h4">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'h5'}}" class="h5-view">
+      <text class="h5">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'h6'}}" class="h6-view">
+      <text class="h6">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'p'}}">
+      <text class="p">{{module.text}}</text>
+    </view>
+
+    <view wx:if="{{module.tag === 'img'}}">
+      <image class="img" src="{{module.src}}"></image>
+    </view>
+
+  </view>
+</view>
