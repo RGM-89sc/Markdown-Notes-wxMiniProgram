@@ -1,21 +1,6 @@
 // pages/editor/editor.js
-var marked = require("../../utils/marked.js");
-
-function htmltowxml(htmlString) {
-  var re_matchTags = /<([a-z0-9]+)(?: .*)*>[^]*?<\/\1>/gi,
-    re_matchTagAttr = /(?:<([a-z0-9]+)(?: ([a-z]+)="(.*)")*>([^]*?)<\/\1>)/im;  // 没有加全局g标志，因为正则里的lastIndex属性
-  
-  var htmltags = htmlString.match(re_matchTags);  // 先匹配出所有html标签
-  console.log(htmltags);
-  
-  var wxmlformatarr = [];
-  htmltags.forEach(function(value, index, array){
-    console.log("每个标签:" + value);
-    console.log(re_matchTagAttr.exec(value));
-    wxmlformatarr.push(re_matchTagAttr.exec(value));  // 获取每个html标签中的属性
-  });
-  return wxmlformatarr;
-};
+var marked = require("../../utils/marked.js"),
+  WxParse = require('../../wxParse/wxParse.js');
 
 Page({
 
@@ -24,8 +9,7 @@ Page({
    */
   data: {
     isEditor: false,
-    context: "",
-    markdownFormat: []
+    context: ""
   },
 
   /**
@@ -102,23 +86,17 @@ Page({
     });
 
     if(this.data.isEditor){
-      var htmlString = marked(this.data.context);
-      console.log("转成html:" + htmlString);
-
-      var wxmlformatarr = htmltowxml(htmlString);
-
-      var format = [];
-      wxmlformatarr.forEach(function(value, index, array){
-        format.push({
-          tag: value[1],
-          text: value[value.length - 1],
-          src: null
-        })
-      });
-
-      this.setData({
-        markdownFormat: format
-      });
+      var article = marked(this.data.context);
+      /**
+      * WxParse.wxParse(bindName , type, data, target,imagePadding)
+      * 1.bindName绑定的数据名(必填)
+      * 2.type可以为html或者md(必填)
+      * 3.data为传入的具体数据(必填)
+      * 4.target为Page对象,一般为this(必填)
+      * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
+      */
+      var that = this;
+      WxParse.wxParse('article', 'html', article, that, 5);
     }
 
     this.setData({
