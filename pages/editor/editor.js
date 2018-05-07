@@ -76,7 +76,6 @@ Page({
     this.setData({
       context: event.detail.value
     });
-    console.log(event.detail.value);
   },
 
   changeModel: function(event){
@@ -107,6 +106,14 @@ Page({
   },
 
   moreMenu: function(event){
-    
+    wx.showActionSheet({
+      itemList: ["更改标题", "删除"],
+      success: function (res) {
+        console.log(res.tapIndex)
+      },
+      fail: function (res) {
+        console.log(res.errMsg)
+      }
+    })
   }
 })

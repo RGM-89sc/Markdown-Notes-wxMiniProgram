@@ -8,8 +8,8 @@
     </view>
     <view class="tap-area">
       <view class="tap">
-        <text class="my-article{{showArticleList ? ' hover' : ''}}" bindtap="myArticle">我的文章</text>
-        <text class="new-article{{newArticle ? ' hover' : ''}}" bindtap="newArticle">新建文章</text>
+        <text class="my-article{{showArticleList ? ' hover' : ''}}" bindtap="myArticle">我的便笺</text>
+        <text class="new-article{{newArticle ? ' hover' : ''}}" bindtap="newArticle">新建便笺</text>
       </view>
       <view class="my-article-area{{showArticleList ? '' : ' hidden'}}">
         <view wx:if="{{articlesNum > 0}}">
@@ -19,7 +19,7 @@
           </view>
         </view>
         <view class="no-article" wx:else>
-          <text>暂无文章</text>
+          <text>暂无数据</text>
         </view>
       </view>
       <view class="new-article-area{{newArticle ? '' : ' hidden'}}">

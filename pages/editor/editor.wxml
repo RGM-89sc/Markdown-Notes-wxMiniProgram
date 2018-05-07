@@ -4,7 +4,7 @@
   <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
 </view>
 <view id="editorarea" wx:if="{{isEditor}}">
-  <textarea id="textarea" maxlength="10000" value="{{context}}" bindinput="getValue"></textarea>
+  <textarea id="textarea" maxlength="10000" value="{{context}}" show-confirm-bar="{{false}}" bindinput="getValue"></textarea>
 </view>
 <view id="viewarea" wx:else>
   <import src="../../wxParse/wxParse.wxml"/>

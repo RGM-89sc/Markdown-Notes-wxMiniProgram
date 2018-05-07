@@ -27,9 +27,9 @@ Page({
   },
   onLoad: function () {
 
-    wx.navigateTo({
-      url: '../editor/editor',
-    })
+    // wx.navigateTo({
+    //   url: '../editor/editor',
+    // })
 
 
     this.setData({
