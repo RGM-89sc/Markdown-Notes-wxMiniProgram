@@ -86,14 +86,13 @@ Page({
 
     if(this.data.isEditor){
       var article = marked(this.data.context);
-      /**
-      * WxParse.wxParse(bindName , type, data, target,imagePadding)
-      * 1.bindName绑定的数据名(必填)
-      * 2.type可以为html或者md(必填)
-      * 3.data为传入的具体数据(必填)
-      * 4.target为Page对象,一般为this(必填)
-      * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
-      */
+
+      // console.log(article);
+
+      // this.setData({
+      //   nodes: article
+      // });
+      
       var that = this;
       WxParse.wxParse('article', 'html', article, that, 5);
     }
@@ -107,9 +106,17 @@ Page({
 
   moreMenu: function(event){
     wx.showActionSheet({
-      itemList: ["更改标题", "删除"],
+      itemList: ["分享给好友","更改标题", "删除便笺"],
       success: function (res) {
-        console.log(res.tapIndex)
+        if(res.tapIndex == 0){
+
+        }
+        if(res.tapIndex == 1){
+
+        }
+        if(res.tapIndex == 2){
+          
+        }
       },
       fail: function (res) {
         console.log(res.errMsg)

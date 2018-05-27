@@ -4,9 +4,10 @@
   <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
 </view>
 <view id="editorarea" wx:if="{{isEditor}}">
-  <textarea id="textarea" maxlength="10000" value="{{context}}" show-confirm-bar="{{false}}" bindinput="getValue"></textarea>
+  <textarea id="textarea" maxlength="-1" value="{{context}}" show-confirm-bar="{{false}}" bindinput="getValue" cursor="-1" cursor-spacing="20" auto-focus="true"></textarea>
 </view>
 <view id="viewarea" wx:else>
-  <import src="../../wxParse/wxParse.wxml"/>
-  <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+   <import src="../../wxParse/wxParse.wxml"/>
+  <template is="wxParse" data="{{wxParseData:article.nodes}}"/> 
+  <!-- <rich-text nodes="{{nodes}}"></rich-text> -->
 </view>

@@ -43,7 +43,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    articlesNum: 0,
-    articles: []
+    notesNum: 0,
+    notes: []
   }
 })

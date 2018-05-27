@@ -1,35 +1,42 @@
 <!--index.wxml-->
 <view>
-  <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 点击登录 </button>
-  <block wx:else>
-    <view class="userinfo">
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+  <view class="add-panel" wx:if="{{addPanel}}" animation="{{animationData}}">
+    <text class="new-title">标题：</text>
+    <form>
+      <input class="new-title-input" type="text" adjust-position="true" maxlength="24" bindinput="titleInput">
+        <text class="len">{{titleLen}}</text>
+      </input>
+      <button class="new" bindtap="hiddenAdd" form-type="reset" type="warn">取消</button>
+      <button class="new" bindtap="new" form-type="reset" type="primary">确认</button>
+    </form>
+  </view>
+
+  <block wx:if="{{!hasUserInfo && canIUse}}">
+    <view class="login">
+      <text>请使用当前微信号登录</text>
+      <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>
     </view>
-    <view class="tap-area">
-      <view class="tap">
-        <text class="my-article{{showArticleList ? ' hover' : ''}}" bindtap="myArticle">我的便笺</text>
-        <text class="new-article{{newArticle ? ' hover' : ''}}" bindtap="newArticle">新建便笺</text>
-      </view>
-      <view class="my-article-area{{showArticleList ? '' : ' hidden'}}">
-        <view wx:if="{{articlesNum > 0}}">
-          <view class="article" wx:for="{{articles}}" wx:for-item="article" wx:key="id">
-            <navigator id="{{article.id}}" class="article-title" url="../editor/editor?id={{article.id}}">{{article.title}}</navigator>
-            <text class="article-date">{{article.date}}</text>
-          </view>
+  </block>
+  <block wx:else>
+     <view class="userinfo">
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="top-title">我的便笺</text>
+      <view class="add" bindtap="add"></view>
+    </view>
+
+    <view class="mask" wx:if="{{addPanel}}" bindtap="hiddenAdd" catchtouchmove="true"></view>
+    
+    <view class="notes-list">
+      <view wx:if="{{notesNum > 0}}">
+        <view class="note" wx:for="{{notes}}" wx:for-item="note" wx:key="id" bindlongpress="conf" data-id="{{note.id}}">
+          <navigator class="note-title" url="../editor/editor?id={{note.id}}" data-id="{{note.id}}" hover-class="none">{{note.title}}</navigator>
+          <text class="note-date" data-id="{{note.id}}">{{note.date}}</text>
+          <!-- <view class="conf"></view> -->
         </view>
-        <view class="no-article" wx:else>
-          <text>暂无数据</text>
-        </view>
       </view>
-      <view class="new-article-area{{newArticle ? '' : ' hidden'}}">
-        <text class="new-title">标题：</text>
-        <form>
-          <input class="new-title-input" type="text" adjust-position="true" maxlength="24" bindinput="titleInput">
-            <text class="len">{{titleLen}}</text>
-          </input>
-          <button class="new" bindtap="new" form-type="reset">确认</button>
-        </form>
+      <view class="no-note" wx:else>
+        <text class="no-note-text">这里空空如也
+        点击右上角+号写一个便笺吧~</text>
       </view>
     </view>
   </block>

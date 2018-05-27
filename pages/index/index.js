@@ -10,14 +10,13 @@ Page({
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
 
-    showArticleList: true,
-    newArticle: false,
+    notes: [],
 
-    articles: [],
+    notesNum: 0,
+    newNoteTitle: null,
+    titleLen: 24,
 
-    articlesNum: 0,
-    newArticleTitle: null,
-    titleLen: 24
+    addPanel: false
   },
   //事件处理函数
   bindViewTap: function() {
@@ -31,10 +30,10 @@ Page({
     //   url: '../editor/editor',
     // })
 
-
+    // 初始化notes数据
     this.setData({
-      articles: app.globalData.articles,
-      articlesNum: app.globalData.articlesNum
+      notes: app.globalData.notes,
+      notesNum: app.globalData.notesNum
     });
 
 
@@ -65,6 +64,7 @@ Page({
       })
     }
   },
+  
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
@@ -74,26 +74,26 @@ Page({
     })
   },
 
-  // 点击“我的文章”选项卡
-  myArticle: function(event){
+  // 点击了添加文章按钮
+  add: function(){
     this.setData({
-      showArticleList: true,
-      newArticle: false
+      addPanel: true,
     });
   },
 
-  // 点击“新建文章”选项卡
-  newArticle: function(event){
+  // 关闭添加文章的面板
+  hiddenAdd: function(){
     this.setData({
-      showArticleList: false,
-      newArticle: true
+      addPanel: false,
+      titleLen: 24,
+      newNoteTitle: null
     });
   },
 
   // 当在“新建文章”中输入标题时
   titleInput: function(event){
     this.setData({
-      newArticleTitle: event.detail.value,
+      newNoteTitle: event.detail.value,
       titleLen: 24 - event.detail.value.length
     });
   },
@@ -102,34 +102,51 @@ Page({
   // 在“新建文章”中点击“确认”
   new: function(event){
     // 文章总数增1
-    app.globalData.articlesNum += 1;
-    this.data.articlesNum += 1;
+    app.globalData.notesNum += 1;
+    this.data.notesNum += 1;
     // 如果填写了标题则新建文章，否则提示未填写
-    if (this.data.newArticleTitle){
-      // 显示“加载中”的提示
-      wx.showLoading({
-        title: "加载中",
-        mask: true
-      });
-      // app全局变量articles增加一篇文章
-      app.globalData.articles.push({
-        id: app.globalData.articlesNum.toString(),
-        title: this.data.newArticleTitle,
-        date: util.formatTime(new Date)
-      });
-      // page全局变量articles增加一篇文章
-      this.setData({
-        articles: app.globalData.articles,
-        articlesNum: app.globalData.articlesNum,
-        newArticleTitle: "",
-        titleLen: 24
-      });
-      // 跳转到编辑页面
-      wx.navigateTo({
-        url: "../editor/editor?id={{app.globalData.articlesNum.toString()}}",
-      });
-      // 关闭“加载中”的提示
-      wx.hideLoading();
+    if (this.data.newNoteTitle){
+      // 如果第一个字符不是空格
+      if (this.data.newNoteTitle[0] != " "){
+        // 显示“加载中”的提示
+        wx.showLoading({
+          title: "加载中",
+          mask: true
+        });
+        // app全局变量notes增加一篇文章
+        app.globalData.notes.unshift({
+          id: app.globalData.notesNum.toString(),
+          title: this.data.newNoteTitle,
+          date: util.formatTime(new Date)
+        });
+        // page全局变量notes增加一篇文章
+        this.setData({
+          notes: app.globalData.notes,
+          notesNum: app.globalData.notesNum,
+          newNoteTitle: "",
+          titleLen: 24,
+
+          addPanel: false
+        });
+        // 跳转到编辑页面
+        wx.navigateTo({
+          url: "../editor/editor?id={{app.globalData.notesNum.toString()}}",
+        });
+        // 关闭“加载中”的提示
+        wx.hideLoading();
+      } else {
+        this.setData({
+          titleLen: 24,
+          newNoteTitle: null
+        });
+
+        wx.showToast({
+          title: "标题第一个字符不能为空格",
+          mask: true,
+          icon: "none",
+          duration: 1400
+        })
+      }
     } else {
       wx.showToast({
         title: "标题不能为空",
@@ -138,5 +155,32 @@ Page({
         duration: 1000
       })
     }
+  },
+
+  // 长按post
+  conf: function(event){
+    console.log(event.target);
+    var that = this;
+    wx.showActionSheet({
+      itemList: ["删除"],
+      success: function (res) {
+        if(res.tapIndex == 0){
+          // app全局变量notes减少一篇文章
+          app.globalData.notes = app.globalData.notes.filter(function(value, index){
+            return value.id != event.target.dataset.id;
+          });
+          // page全局变量notes减少一篇文章
+          that.setData({
+            notes: app.globalData.notes,
+            notesNum: app.globalData.notesNum
+          });
+
+          /* 【此处写与后台从数据库中删除这个note的交互】 */
+        }
+      },
+      fail: function (res) {
+        console.log(res.errMsg)
+      }
+    })
   }
 })
