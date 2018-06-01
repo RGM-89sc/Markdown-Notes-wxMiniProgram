@@ -1,6 +1,6 @@
 <!--index.wxml-->
-<view>
-  <view class="add-panel" wx:if="{{addPanel}}" animation="{{animationData}}">
+<view class="bg">
+  <view class="add-panel" wx:if="{{addPanel}}">
     <text class="new-title">标题：</text>
     <form>
       <input class="new-title-input" type="text" adjust-position="true" maxlength="24" bindinput="titleInput">
@@ -28,10 +28,9 @@
     
     <view class="notes-list">
       <view wx:if="{{notesNum > 0}}">
-        <view class="note" wx:for="{{notes}}" wx:for-item="note" wx:key="id" bindlongpress="conf" data-id="{{note.id}}">
+        <view class="note" wx:for="{{notes}}" wx:for-item="note" wx:key="id" bindlongpress="conf" data-id="{{note.id}}" hover-class="bg_gray">
           <navigator class="note-title" url="../editor/editor?id={{note.id}}" data-id="{{note.id}}" hover-class="none">{{note.title}}</navigator>
           <text class="note-date" data-id="{{note.id}}">{{note.date}}</text>
-          <!-- <view class="conf"></view> -->
         </view>
       </view>
       <view class="no-note" wx:else>

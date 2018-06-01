@@ -1,13 +1,30 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/editor/editor"
+    "pages/editor/editor",
+    "pages/mymsg/mymsg"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#95d0de",
     "navigationBarTitleText": "MarkNote",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "selectedColor": "#95d0de",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "我的便笺",
+        "iconPath": "icon/notes.png",
+        "selectedIconPath": "icon/notes_select.png"
+      },
+      {
+        "pagePath": "pages/mymsg/mymsg",
+        "text": "我",
+        "iconPath": "icon/me.png",
+        "selectedIconPath": "icon/me_select.png"
+      }
+    ]
   }
 }

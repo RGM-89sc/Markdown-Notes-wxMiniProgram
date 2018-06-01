@@ -1,0 +1,21 @@
+<!--pages/mymsg/mymsg.wxml-->
+<view class="bg">
+  <view class="msg-panel">
+    <view class="userinfo">
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </view>
+    <view class="notes-msg-panel">
+      <text class="notes-total-title">总便笺数</text>
+      <text class="notes-total">{{notesNum}}</text>
+    </view>
+  </view>
+  <view class="menu">
+    <view class="{{touchAbout ? 'about-on' : 'about-off'}}" bindtap="about" hover-class="bg_gray">
+      <text class="about-title">关于</text>
+      <view wx:if="{{touchAbout}}" class="about-context">
+        <text>MarkNote是一个支持markdown语法的记事型小程序</text>
+      </view>
+    </view>
+  </view>
+</view>

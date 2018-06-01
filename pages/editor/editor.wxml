@@ -1,13 +1,27 @@
 <!--pages/editor/editor.wxml-->
-<view id="toolsbar">
-  <view id="more-option" bindtap="moreMenu"></view>
-  <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
-</view>
-<view id="editorarea" wx:if="{{isEditor}}">
-  <textarea id="textarea" maxlength="-1" value="{{context}}" show-confirm-bar="{{false}}" bindinput="getValue" cursor="-1" cursor-spacing="20" auto-focus="true"></textarea>
-</view>
-<view id="viewarea" wx:else>
-   <import src="../../wxParse/wxParse.wxml"/>
-  <template is="wxParse" data="{{wxParseData:article.nodes}}"/> 
-  <!-- <rich-text nodes="{{nodes}}"></rich-text> -->
+<view class="bg">
+  <view class="change-panel" wx:if="{{changeNoteTitle}}">
+    <text class="new-title">标题：</text>
+    <form>
+      <input class="new-title-input" type="text" adjust-position="true" maxlength="24" bindinput="titleInput">
+        <text class="len">{{titleLen}}</text>
+      </input>
+      <button class="change" bindtap="hiddenChange" form-type="reset" type="warn">取消</button>
+      <button class="change" bindtap="change" form-type="reset" type="primary">确认</button>
+    </form>
+  </view>
+
+  <view class="mask" wx:if="{{changeNoteTitle}}" bindtap="hiddenChange" catchtouchmove="true"></view>
+
+  <view id="toolsbar">
+    <view id="more-option" bindtap="moreMenu"></view>
+    <view id="change-model" class="{{isEditor ? 'markview' : 'editorview'}}" bindtap="changeModel"></view>
+  </view>
+  <view id="editorarea" wx:if="{{isEditor}}">
+    <textarea id="textarea" maxlength="-1" value="{{context}}" show-confirm-bar="{{false}}" bindinput="getValue" cursor="-1" cursor-spacing="20" auto-focus="true"></textarea>
+  </view>
+  <view id="viewarea" wx:else>
+    <import src="../../wxParse/wxParse.wxml"/>
+    <template is="wxParse" data="{{wxParseData:article.nodes}}"/> 
+  </view>
 </view>

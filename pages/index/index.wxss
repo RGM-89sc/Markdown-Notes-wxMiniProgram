@@ -1,4 +1,10 @@
 /**index.wxss**/
+.bg{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(248, 248, 248);
+}
 
 .login{
   margin: 10% auto;
@@ -11,10 +17,9 @@
   position: fixed;
   width: 100%;
   height: 80rpx;
-   text-align: center; 
-  border-top: 1rpx solid #eee;
+  text-align: center; 
   box-shadow: 0 0 10rpx 0 #aaa;
-  background-color: white;
+  background-color: #95d0de;
 } 
 /* 用户头像 */
  .userinfo-avatar {
@@ -29,8 +34,8 @@
 }
 /* “我的便笺”标题 */
 .top-title{
-  font-size: 42rpx;
-   line-height: 80rpx;
+  font-size: 38rpx;
+  line-height: 80rpx;
 }
 /* 添加便笺按钮 */
 .add{
@@ -41,7 +46,7 @@
   margin-top: -30rpx;
   width: 60rpx;
   height: 60rpx;
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAp0lEQVRYR+2XwQ2DMAxFvzfoCB2BERgh3oROApskI3QERmAENnCVCnEAoaQNki8/Zyt+eZa+HIHzEef+IECTgRDCM48wpbT8O8omAFVNuXGMMXgBvDeAngA0QAM0cJuBLV5HAI/SpSLS5Rozm0u1AFYAr2Nsn6I4A4jIVAMA4AsAoArAzIYiQMVL9hJVZRTTAA3QgLsB36XUfS3/Jbavapv+BQS4w8AHa8NsIUZBjCIAAAAASUVORK5CYII=) no-repeat center;
+  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgEAYAAAAj6qa3AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAOxJREFUaN7tmLEJhDAUhl/CKegO2tipC+gQ4ibWWUBtXSM2buECtlYOIdi8K+48uOKwsPgP8r4mCMF8fAR5SCQIggAgT/IkT6LoXFEeGnUwV1xx1fc88MBD16E8HqiDqaSSSs+jnXbaYRa4G/AvSAC0ABoJgBZAIwHQAmicD6CuNqQ2tamNYxWqUIVt+xpcfP/2yTXVVBfF53miiaZ5vv3egAIKjkM1qlGNMcu6rMu6bb+2X94AbbTRhvm2mPBNNmZjNlp7rigP578BEgAtgEYCoAXQSAC0ABrnA+D+Cb5HVmcDnLM6OoAgCG7zBA6SNz7E8qtSAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA1LTI4VDIwOjM1OjMwKzA4OjAwjwG9GQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wNS0yOFQyMDozNTozMCswODowMP5cBaUAAABLdEVYdHN2ZzpiYXNlLXVyaQBmaWxlOi8vL2hvbWUvYWRtaW4vaWNvbi1mb250L3RtcC9pY29uX2Jud290dnhhbHlmeDBmNnIvYWRkLnN2ZxGd6vsAAAAASUVORK5CYII=) no-repeat center;
   background-size: cover;
 }
 /* 便笺区域 */
@@ -70,21 +75,21 @@
 }
 /** 用户信息部分结束 **/
 
-/** 我的文章部分开始 **/
+/** 我的便笺部分开始 **/
 /* 便笺 */
  .note{
   margin: 35rpx;
-  padding: 20rpx 20rpx;
+  padding: 15rpx 25rpx;
   min-height: 120rpx;
   background-color: white;
-  box-shadow: 4px 4px 10rpx 0 #eee;
+  border-radius: 20rpx;
 } 
-/* 便笺的文章标题 */
+/* 便笺的标题 */
  .note-title{
-  font-size: 40rpx;
+  font-size: 35rpx;
   line-height: 60rpx;
 } 
-/* 便笺的文章创建时间 */
+/* 便笺的创建时间 */
  .note-date{
   height: 30rpx;
   font-size: 30rpx;
@@ -92,15 +97,6 @@
   color: #aaa;
   clear: both;
 } 
-
-/* .conf{
-  float: right;
-  margin-right: 20rpx;
-  width: 60rpx;
-  height: 60rpx;
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAiUlEQVRYR+2UwQnAMAwD7Q5WOoI9UKEbBTJBZ+gmHSAQ8i8F+SM/nE8+FpHOIirko+T3pQwUgSKQm4C73+ufaK0d6zazU1UvEdmA/+MdY+y99+dL80uAbgBIGR7N3YFwLECYmwC9hHQDwCrDo7k7EI4FCHMToJeQbgBYZXg0dwfCsQBhESgCRWACJU1OIZzTbLsAAAAASUVORK5CYII=) no-repeat center;
-  background-size: cover;
-} */
 /** 我的便笺部分结束 **/
 
 /** 新建便笺部分开始 **/
@@ -134,6 +130,7 @@
  .no-note{
   margin-top: 20%;
   text-align: center;
+  /* background-color: white; */
 } 
 /* 没有便笺时的文字 */
 .no-note-text{
@@ -145,4 +142,8 @@
 
 .top-bar{
   background-color: #eee;
+}
+
+.bg_gray{
+  background-color: rgb(240, 240, 240);
 }

@@ -1,4 +1,10 @@
 /* pages/editor/editor.wxss */
+.bg{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(248, 248, 248);
+}
 /*** 顶部工具栏部分开始 ***/
 /* 顶部工具栏框开始 */
 #toolsbar{
@@ -6,9 +12,8 @@
   width: 100%;
   height: 80rpx;
   overflow: hidden;
-  border-top: 1rpx solid #eee;
   box-shadow: 0 0 10rpx 0 #aaa;
-  background-color: white;
+  background-color: #95d0de;
 }
 /* 更多-按钮 */
 #more-option{
@@ -18,7 +23,7 @@
   margin-top: -30rpx;
   width: 60rpx;
   height: 60rpx;
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAcklEQVRYR+2U0QmAQAxD0yUcwmWOgrjkfZQu4xAuUf/l8OsgiukAbXhJYyCPke9DAkRgSKC1tprZMjOgVXVm5nHfORTg7h3ANlMAgB4R+zcE0C2YjP5xnd7wnQToIVQP0C1QD4gAPYTqAboF+gIR+BWBC+s6TiGDOwRgAAAAAElFTkSuQmCC) no-repeat center;
+  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgEAYAAAAj6qa3AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAVxJREFUaN7t17+qgnAUB/CfJEUEvUBBS4v+kiahZxBnR+deoNwcmppbgx7AoCl8A8nFRdR0aBLqAYL+aHjuEFy4Fy4md7A/57P+8Mc53+Gcn4QghBBCH4vJOWaEiTARJr0eWZIlWVarZRdcuEGVURn1enVH7sgded7vc/avD3mDN3hDFGEFK1jZNgECBJicwJ4POOCAA0DXdE3XlPqyL/vydvsdUN4F3Vl31p01m/V5fV6fVyplN1RUIiZiIt5u0SJaRIvjsex6EELPJXcIchIncVKnw8ZszMavNwThBCc4pam383beLo4fDkAwBVMwBwMYwxjGm03ZjfxXpmd6plMaKIESKEGQG8DPINptohGNaK/3ELqvwcvlvgb3+7LrQQg9l9wh2B/2h/1hq5VZmZVZtVrZBReV2qmd2udz2AgbYeNweDiAd1uDMIUpTHm+8N/guz+EEEIIIfS5vgD4g6fvhSkLjQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wNS0yOFQyMDozNTozMCswODowMI8BvRkAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDUtMjhUMjA6MzU6MzArMDg6MDD+XAWlAAAATHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy9ob21lL2FkbWluL2ljb24tZm9udC90bXAvaWNvbl9ibndvdHZ4YWx5ZngwZjZyL21lbnUuc3ZnWF9YywAAAABJRU5ErkJggg==) no-repeat center;
   background-size: cover;
 }
 
@@ -30,15 +35,17 @@
   margin-top: -30rpx;
   width: 60rpx;
   height: 60rpx;
-  background-size: cover;
+  
 }
 /* 显示markdown显示区域按钮开始 */
 .markview{
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADRklEQVRYR+2VT2hcVRTGv2/eBLNwkahI6cIiUhHtQslCiKFc372DpFEXGiyK6EZoupEoiJGiiNIqWHSjIOmuoBBpFWyDmrk3vsWoKAYFjVj/gIrUWBRHdDOal09umch0Mm+mlUg2c3ePc+49v/vd75xHbPHiFtdHH6CvQF+B81agUqlslzQBwEhKSW5ra+GfALwLICM5X61WT59Pi/cESNN0B8nDJCcl/d0s8BaAT2IBSUMkd0q6iuQ1kkZJDkg6nuf5dJZlP3YDKQQYGRkZGBoaeoTkEwB+lvRUnudzWZb92e1AY8zFSZLsjfskXQ7g6Xq9/tzS0lKE37A6AhhjBpMkmSd5g6TH6/X6bNEBRTDj4+MXNRqNZ0hOAwgrKysTy8vLf7XnbwAwxpTL5fJJALH4zSGEL9o3WWtvJTkDYFcz9nm8qff+nfZc55wDMCfpwzzPb8+ybLU1px2Azrm5aLTV1dXRLMu+KSh+QtIbAF6LcZL3ApiQdFsIIcKfs4wxu5Ik+YjkSe/9XYUAzrn9AF4kOVKtVj/tJK9zrhY94b2/szVurT0B4JIQwk2d9qVpenepVHp1bW1t/+Li4svrOf8qYIy5LEmSrwHMhhAeLXpba+0fJB/23h9pzUnTdKpUKh303l/aZW8svDfP851Zlv1yVr315LGxseHBwcFTkl4PIUwVHeKc+xXATDuAtXYfyUM9AA4DuL/RaFxdq9V+OwcgfjjnbgHwdqT03p993w6mqkk6E0K4ozXmnJuPM6HoCSqVyvWSPo5eaTXrhi6w1h4CME3yRu/9Z0UmBPAmgFckDZC8B8CeIhNWKpU4qN6TdCSEcKBbF8RYyVp7nOTuphK+EwSAx0het96Gkp7t1AHW2mtJxhH9gfc+qrbWC2Ad4nkADwJ4oV6vz1zoIIqTdHh4+AEAByUdDSE8FCd3+2W6/gustZMAjgKIxnvyQkZxzAcQO+K+EMKxIlP3/BkZY7aVy+UpSfvigSTfl/QlyW8BfAXg9+bh0WR74hBrAs8mSfLSwsLCmaLiG7qgW2Ic0UmSTJIclXQlyR0Armju+UHS9yS/i2bL8/xY+8j9zwp0g9qMWM8n2Iwim/IE/xdIX4G+AluuwD9PMmwwlQ7LfwAAAABJRU5ErkJggg==) no-repeat center;
+  background: url(data:image/gif;base64,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);
+  background-size: cover;
 }
 /* 显示编辑区域按钮 */
 .editorview{
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACSklEQVRYR+2WTYsTQRCGq2ZQ2Rzn4EUQ8eIvWHEjgpnqxV1WFg/qQTyIF3+I/hJPSnT9ZDXQWUqCKyi5uAQ8ePAQSDTgeBB1pJuShgyE3Xz0zAQCsnOdmXqefqu6ZxAWfOGC+XAo8H8koJS6AQB7Wuu9vDM1jwRQKbULAGeMMVVm/pRHopQAEV2Iomh3MBgshWG4g4inhhKffSUKCxDRVUR8ICLPoyi6NpRoAMBpa+0KM3/xkSgkUKvVNsMw3BIRF/0KALxwEt1u92ilUtEAcHIo0Z0lkVvAwYMgeJxBkyRZE5GnYyROWGvPMXN/mkQugf3wer1uXXGl1IaIPAGAl9ba62maHnFJIOLxNE2rrVZrMEnCW4CI1twqAeBRFEU3M3hWmIhWEdHd18aYKyMSURiG5xuNxvdxEl4CDo6Iz0Rkq9lsuj0v44oppS6KyDYi7oxI3LXW3mPmH4UEfOFZ8TiOq4jYQMQ3ToKZTeEZiOM4DoLg1ayVjwKIaBkA3Jnw1hhzubDAEL7thmta7JPgvV5vs9Pp/C20DTM4ADzUWt+a1POycPf+gSEsAs/6DgDv+/3+us/KM/kDAkSUAMBr39iHcHf6vbPWbjDzn1mxj94fJ/AbEe9ore/PKlQWPrYFROQlMA94YYEMjohtY8xq3thLtWDktGsnSXKp3W7/mtWqXAfRtBY4uBtQAPgwD/i0Frifia/7zUXkLCJ+TJIkLrvyidtQKeX+ao5NiO2bMeY2M/8sE/vUGZhXYd86Xp9j32JFnjsUWHgC/wDEqlowQcW1KQAAAABJRU5ErkJggg==) no-repeat center;
+  background: url(data:image/gif;base64,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);
+  background-size: cover;
 }
 /** 切换显示模式结束 **/
 /*** 顶部工具栏部分结束 ***/
@@ -46,18 +53,70 @@
 /** 编辑和显示区域部分开始 **/
 #editorarea, #viewarea{
   padding: 121rpx 60rpx 40rpx;
-  height: calc(100vh - 161rpx);
+  height: calc(100% - 161rpx);
   overflow: hidden;
 }
 /* 编辑区域 */
 #textarea{
-  width: 100%;
+  padding: 10rpx 20rpx 0;
+  width: calc(100% - 40rpx);
   height: 100%;
-  background-color: rgb(250, 250, 250);
-  overflow-x: scroll;
+  border-radius: 10rpx;
+  background-color: white;
+  overflow-y: scroll;
 }
-/* markdown显示区域 */
+
 #viewarea{
-  height: 100% !important;
+  overflow-y: scroll;
 }
 /** 编辑和显示区域部分结束 **/
+
+
+/* 遮罩 */
+.mask{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 100;
+}
+/* 更改便笺标题的面板 */
+.change-panel{
+  position: fixed;
+  top: 15%; 
+  left: calc(10% - 20rpx);
+  padding: 20rpx;
+  width: 80%;
+  height: 360rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  z-index: 101;
+}
+
+/* 新建便笺中的label */
+ .new-title{
+  display: inline-block;
+  padding: 20rpx 0 0 10rpx;
+} 
+/* 标题的输入框 */
+ .new-title-input{
+  position: relative;
+  margin-top: 20rpx;
+  padding: 10rpx 80rpx 10rpx 10rpx;
+  border-bottom: 1rpx solid #ddd;
+} 
+/* 输入标题剩下的可用字数 */
+ .len{
+  position: absolute;
+  bottom: 5rpx;
+  right: 30rpx;
+  font-size: 30rpx;
+  color: #ddd;
+} 
+/* 按钮 */
+ .change{
+  display: inline-block;
+  margin: 70rpx 5% 0;
+  width: 40%;
+} 

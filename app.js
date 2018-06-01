@@ -44,6 +44,7 @@ App({
   globalData: {
     userInfo: null,
     notesNum: 0,
-    notes: []
+    notes: [],
+    deleteID: null
   }
 })

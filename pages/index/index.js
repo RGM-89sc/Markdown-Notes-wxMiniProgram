@@ -18,17 +18,23 @@ Page({
 
     addPanel: false
   },
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  onLoad: function () {
 
-    // wx.navigateTo({
-    //   url: '../editor/editor',
-    // })
+  onShareAppMessage: function (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: 'MarkNote',
+      path: 'pages/index/index'
+    }
+  },
+
+  onLoad: function () {
+    // 显示转发按钮
+    wx.showShareMenu({
+      withShareTicket: true
+    })
 
     // 初始化notes数据
     this.setData({
@@ -64,6 +70,19 @@ Page({
       })
     }
   },
+
+  onShow: function(){
+    // 如果有需要删除的id，则在页面显示的时候删除对应的note
+    if (app.globalData.deleteID){
+      this.deleteNoteByID(app.globalData.deleteID);
+      app.globalData.deleteID = null;
+    }
+
+    // 更新notes标题，如果在编辑页面更改了标题，此时会进行更新
+    this.setData({
+      notes: app.globalData.notes
+    });
+  },
   
   getUserInfo: function(e) {
     console.log(e)
@@ -98,6 +117,12 @@ Page({
     });
   },
 
+  guid: function() {
+    function S4() {
+      return(((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+  },
 
   // 在“新建文章”中点击“确认”
   new: function(event){
@@ -113,9 +138,13 @@ Page({
           title: "加载中",
           mask: true
         });
+
+        // 给本note生成一个GUID，用作本note的ID
+        var guid = this.guid();
+
         // app全局变量notes增加一篇文章
         app.globalData.notes.unshift({
-          id: app.globalData.notesNum.toString(),
+          id: guid,
           title: this.data.newNoteTitle,
           date: util.formatTime(new Date)
         });
@@ -130,7 +159,7 @@ Page({
         });
         // 跳转到编辑页面
         wx.navigateTo({
-          url: "../editor/editor?id={{app.globalData.notesNum.toString()}}",
+          url: "../editor/editor?id=" + guid,
         });
         // 关闭“加载中”的提示
         wx.hideLoading();
@@ -157,25 +186,43 @@ Page({
     }
   },
 
+  deleteNoteByID: function(id){
+    // app全局变量notes减少一篇note
+    app.globalData.notes = app.globalData.notes.filter(function (value, index) {
+      return value.id != id;
+    });
+
+    app.globalData.notesNum--;
+
+    // page全局变量notes减少一篇note
+    this.setData({
+      notes: app.globalData.notes,
+      notesNum: app.globalData.notesNum
+    });
+
+    /* 【此处写与后台从数据库中删除这个note的交互】 */
+    wx.request({
+      url: '',
+      data: {
+        deleteID: id,
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function (res) {
+        console.log(res.data)
+      }
+    })
+  },
+
   // 长按post
   conf: function(event){
-    console.log(event.target);
     var that = this;
     wx.showActionSheet({
       itemList: ["删除"],
       success: function (res) {
         if(res.tapIndex == 0){
-          // app全局变量notes减少一篇文章
-          app.globalData.notes = app.globalData.notes.filter(function(value, index){
-            return value.id != event.target.dataset.id;
-          });
-          // page全局变量notes减少一篇文章
-          that.setData({
-            notes: app.globalData.notes,
-            notesNum: app.globalData.notesNum
-          });
-
-          /* 【此处写与后台从数据库中删除这个note的交互】 */
+          that.deleteNoteByID(event.target.dataset.id);
         }
       },
       fail: function (res) {
