@@ -2,7 +2,10 @@
 //获取应用实例
 const app = getApp()
 
-var util = require('../../utils/util.js')
+var host = 'https://rt1rggjo.qcloud.la';
+var util = require('../../utils/util.js'),
+  qcloud = require('../../vendor/wafer2-client-sdk/index'),
+  config = require('../../config')
 
 Page({
   data: {
@@ -36,42 +39,67 @@ Page({
       withShareTicket: true
     })
 
-    // 初始化notes数据
-    this.setData({
-      notes: app.globalData.notes,
-      notesNum: app.globalData.notesNum
-    });
-
-
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
+    } 
+
+    var that = this;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 登录 */
+    qcloud.setLoginUrl(host + '/weapp/login');
+    qcloud.login({
+      success: function (userInfo) {
+        console.log('登录成功', userInfo);
+        that.setData({
+          userInfo: userInfo,
+          hasUserInfo: true,
+        });
+        that.loadNotes();
+      },
+      fail: function (err) {
+        console.log('登录失败', err);
       }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  },
+
+  loadNotes: function(){
+    var that = this;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 请求后台获取notes列表 */
+    var notesNum,
+      notes;
+    console.log(this.data.userInfo.openId);
+    qcloud.request({
+      url: host + '/weapp/getNotesList?openID=' + that.data.userInfo.openId,
+      success: function (response) {
+        console.log(response.data.data.context);
+        notes = response.data.data.context;
+        notesNum = notes.length;
+
+        // 初始化notes数据
+        that.setData({
+          notes: notes,
+          notesNum: notesNum
+        });
+        app.globalData.notes = notes;
+        app.globalData.notesNum = notesNum;
+      },
+      fail: function (err) {
+        console.log(err);
+      }
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   },
 
   onShow: function(){
+    // 当已有用户信息的情况下onshow被激活才执行
+    if (this.data.userInfo.openID){
+      this.loadNotes();
+    }
     // 如果有需要删除的id，则在页面显示的时候删除对应的note
     if (app.globalData.deleteID){
       this.deleteNoteByID(app.globalData.deleteID);
@@ -83,7 +111,7 @@ Page({
       notes: app.globalData.notes
     });
   },
-  
+
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
@@ -139,15 +167,16 @@ Page({
           mask: true
         });
 
-        // 给本note生成一个GUID，用作本note的ID
-        var guid = this.guid();
+        var that = this;
+        // 建立note对象
+        var note = {
+          id: that.guid(),  // 给本note生成一个GUID，用作本note的ID
+          title: that.data.newNoteTitle,
+          date: util.formatTime(new Date)
+        }
 
         // app全局变量notes增加一篇文章
-        app.globalData.notes.unshift({
-          id: guid,
-          title: this.data.newNoteTitle,
-          date: util.formatTime(new Date)
-        });
+        app.globalData.notes.unshift(note);
         // page全局变量notes增加一篇文章
         this.setData({
           notes: app.globalData.notes,
@@ -159,7 +188,7 @@ Page({
         });
         // 跳转到编辑页面
         wx.navigateTo({
-          url: "../editor/editor?id=" + guid,
+          url: `../editor/editor?openID=${that.data.userInfo.openId}&noteID=${note.id}&noteTitle=${note.title}&noteDate=${note.date}&hasThisNote=false`,
         });
         // 关闭“加载中”的提示
         wx.hideLoading();
@@ -200,19 +229,18 @@ Page({
       notesNum: app.globalData.notesNum
     });
 
-    /* 【此处写与后台从数据库中删除这个note的交互】 */
-    wx.request({
-      url: '',
-      data: {
-        deleteID: id,
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 请求后台从数据库中删除这个note */
+    qcloud.request({
+      url: host + '/weapp/deleteNoteById?noteID=' + id,
+      success: function (response) {
+        console.log(response.data.data.context);
       },
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success: function (res) {
-        console.log(res.data)
+      fail: function (err) {
+        console.log(err);
       }
-    })
+    });
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   },
 
   // 长按post

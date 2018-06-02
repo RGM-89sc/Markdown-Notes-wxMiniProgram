@@ -3,9 +3,10 @@ var marked = require("../../utils/marked.js"),
   WxParse = require('../../wxParse/wxParse.js');
 
 var app = getApp();
+var qcloud = require('../../vendor/wafer2-client-sdk/index')
+var host = 'https://rt1rggjo.qcloud.la';
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -24,25 +25,28 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // 请求后台获取本note的内容
-    wx.request({
-      url: '',
-      data: {
-        id: options.id
-      },
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success: function (res) {
-        console.log(res.data)  // note的内容，要设置到this.data中去
-      }
-    });
-    
+    console.log(options);
     this.setData({
       options: options,
-      isEditor: true,
-      context: "# 此处为一级标题"
+      isEditor: true
     });
+
+    var that = this;
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 请求后台获取本note的内容 */
+    qcloud.request({
+      url: `${host}/weapp/getNoteContext?openID=${options.openID}&noteID=${options.noteID}&noteTitle=${options.noteTitle}&noteDate=${options.noteDate}&hasThisNote=${options.hasThisNote}`,
+      success: function (response) {
+        console.log(response.data.data);
+        that.setData({
+          context: decodeURIComponent(response.data.data.context)
+        });
+      },
+      fail: function (err) {
+        console.log(err);
+      }
+    });
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   },
 
   /**
@@ -63,14 +67,30 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+    var context = encodeURIComponent(this.data.context);
+    console.log(context);
+    var that = this;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 更新数据库 */
+    qcloud.request({
+      url: host + '/weapp/updateNoteContext?noteID=' + that.data.options.noteID + "&noteContext=" + context,
+      success: function (response) {
+        console.log(response.data.data.context);
+      },
+      fail: function (err) {
+        console.log(err);
+      }
+    });
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
   },
 
   /**
@@ -85,6 +105,30 @@ Page({
    */
   onReachBottom: function () {
   
+  },
+
+  loadNotes: function () {
+    var that = this;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* 请求后台获取notes列表 */
+    var notesNum,
+      notes;
+    qcloud.request({
+      url: host + '/weapp/getNotesList?openID=' + that.data.options.noteID,
+      success: function (response) {
+        console.log(response.data.data.context);
+        notes = response.data.data.context;
+        notesNum = notes.length;
+
+        // app.globalData.notes = notes;
+        // app.globalData.notesNum = notesNum;
+        console.log(app.globalData.notes);
+      },
+      fail: function (err) {
+        console.log(err);
+      }
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   },
 
   /**
@@ -152,27 +196,25 @@ Page({
       // 如果第一个字符不是空格
       if (this.data.newNoteTitle[0] != " ") {
         var that = this;
-        app.globalData.notes.forEach(function (value) {
-          if (value.id === that.data.options.id) {
-            value.title = that.data.newNoteTitle;
-            return null;
+        var i, id = that.data.options.noteID;
+        for (i = 0; i < app.globalData.notes.length; i++){
+          console.log(app.globalData.notes[i].id, id);
+          if (app.globalData.notes[i].id === id){
+            app.globalData.notes[i].title = this.data.newNoteTitle;
+            break;
+          }
+        }
+
+        /* 请求后台更改标题 */
+        qcloud.request({
+          url: host + "/weapp/changeNoteTitle?noteID=" + that.data.options.noteID + "&noteTitle=" + that.data.newNoteTitle,
+          success: function (response) {
+            console.log(response.data.data.context);
+          },
+          fail: function (err) {
+            console.log(err);
           }
         });
-
-        // 请求后台更改标题
-        wx.request({
-          url: '',
-          data: {
-            id: that.data.options.id,
-            newTitle: that.data.newNoteTitle
-          },
-          header: {
-            'content-type': 'application/json' // 默认值
-          },
-          success: function (res) {
-            console.log(res.data)
-          }
-        })
 
         // 给出成功的提示
         wx.showToast({
@@ -218,24 +260,10 @@ Page({
           });
         }
         if(res.tapIndex == 1){
-          // 请求后台删除note
-          wx.request({
-            url: '',
-            data: {
-              deleteID: that.data.options.id,
-            },
-            header: {
-              'content-type': 'application/json' // 默认值
-            },
-            success: function (res) {
-              console.log(res.data)
-            }
-          })
-
           wx.navigateBack({
             data: 1
           });
-          app.globalData.deleteID = that.data.options.id;
+          app.globalData.deleteID = that.data.options.noteID;
         }
       },
       fail: function (res) {

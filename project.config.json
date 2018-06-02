@@ -1,5 +1,8 @@
 {
-	"description": "项目配置文件。",
+	"client": "./client",
+	"svr": "./server",
+	"miniprogramRoot": "./client",
+	"qcloudRoot": "./server",
 	"setting": {
 		"urlCheck": true,
 		"es6": true,
@@ -7,31 +10,7 @@
 		"minified": true,
 		"newFeature": true
 	},
-	"compileType": "miniprogram",
-	"libVersion": "1.9.94",
 	"appid": "wx6d4eee94398f81e5",
-	"projectname": "wechat-%E5%B0%8F%E7%A8%8B%E5%BA%8F",
-	"isGameTourist": false,
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"currentL": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": []
-		}
-	}
+	"projectname": "%E6%B5%8B%E8%AF%95",
+	"condition": {}
 }

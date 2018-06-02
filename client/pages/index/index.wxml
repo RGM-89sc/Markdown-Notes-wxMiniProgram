@@ -29,11 +29,11 @@
     <view class="notes-list">
       <view wx:if="{{notesNum > 0}}">
         <view class="note" wx:for="{{notes}}" wx:for-item="note" wx:key="id" bindlongpress="conf" data-id="{{note.id}}" hover-class="bg_gray">
-          <navigator class="note-title" url="../editor/editor?id={{note.id}}" data-id="{{note.id}}" hover-class="none">{{note.title}}</navigator>
+          <navigator class="note-title" url="../editor/editor?openID={{userInfo.openId}}&noteID={{note.id}}&noteTitle={{note.title}}&noteDate={{note.date}}&hasThisNote={{true}}" data-id="{{note.id}}" hover-class="none">{{note.title}}</navigator>
           <text class="note-date" data-id="{{note.id}}">{{note.date}}</text>
         </view>
       </view>
-      <view class="no-note" wx:else>
+      <view wx:else class="no-note">
         <text class="no-note-text">这里空空如也
         点击右上角+号写一个便笺吧~</text>
       </view>

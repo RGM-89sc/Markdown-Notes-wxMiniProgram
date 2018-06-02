@@ -5,10 +5,10 @@
     "pages/mymsg/mymsg"
   ],
   "window": {
-    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#95d0de",
     "navigationBarTitleText": "MarkNote",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "backgroundTextStyle": "dark"
   },
   "tabBar": {
     "selectedColor": "#95d0de",
