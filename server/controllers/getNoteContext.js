@@ -1,34 +1,37 @@
-const { mysql } = require('../qcloud')
+var marknote = require('../libs/mksql');
 
 module.exports = async ctx => { 
-  // 分割出各个参数
-  var originalUrl = ctx.originalUrl,
-  optionsStr = originalUrl.slice(originalUrl.indexOf('?') + 1, originalUrl.length).split("&"),
-  optionsArr = [];
+  ctx.body = {
+    openID: ctx.request.query.openID,
+    noteID: ctx.request.query.noteID,
+    noteTitle: ctx.request.query.noteTitle,
+    noteDate: ctx.request.query.noteDate,
+    hasThisNote: ctx.request.query.hasThisNote
+  };
 
-  optionsStr.forEach(function(value){
-    var tmp1 = value.slice(0, value.indexOf('='));
-    var tmp2 = value.slice(value.indexOf('=') + 1, value.length);
-    optionsArr.push([tmp1, tmp2]);
-  });
+  if (ctx.body.openID && ctx.body.noteID && ctx.body.noteTitle && ctx.body.noteDate && ctx.body.hasThisNote){
+    // 如果存在此文章，则返回内容
+    if (ctx.body.hasThisNote === "true") {
+      var { noteContext } = await marknote("userData").where({ noteID: ctx.body.noteID }).select("noteContext").first();
 
-  // 如果存在此文章，则返回内容
-  if (optionsArr[4][1] === "true"){
-    var { noteContext } = await mysql("userData").where({ noteID: optionsArr[1][1] }).select("noteContext").first();
-
-    ctx.state.data = {
-      context: noteContext
+      ctx.body = {
+        context: noteContext
+      };
+    } else {  // 如果id不存在，证明是篇新文章，新建之
+      await marknote('userData').insert({
+        openID: ctx.body.openID,
+        noteID: ctx.body.noteID,
+        noteTitle: ctx.body.noteTitle,
+        noteDate: decodeURI(ctx.body.noteDate),
+        noteContext: "# " + ctx.body.noteTitle
+      });
+      ctx.body = {
+        context: "# " + ctx.body.noteTitle
+      };
     }
-  } else {  // 如果id不存在，证明是篇新文章，新建之
-    await mysql('userData').insert({
-      openID: optionsArr[0][1],
-      noteID: optionsArr[1][1],
-      noteTitle: optionsArr[2][1],
-      noteDate: decodeURI(optionsArr[3][1]),
-      noteContext: "# Hello world"
-    });
-    ctx.state.data = {
-      context: "# Hello world"
-    }
+  } else {  // 如果没有这些参数，那么有可能是直接调用了接口，不允许
+    ctx.body = {
+      context: "缺少参数"
+    };
   }
 }

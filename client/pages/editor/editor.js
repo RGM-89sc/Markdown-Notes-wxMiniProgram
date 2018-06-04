@@ -12,7 +12,7 @@ Page({
    */
   data: {
     options: null,
-    isEditor: false,
+    isEditor: true,
     context: "",
 
     changeNoteTitle: false,
@@ -28,19 +28,38 @@ Page({
     console.log(options);
     this.setData({
       options: options,
-      isEditor: true
+    });
+
+    wx.showLoading({
+      title: '加载中',
     });
 
     var that = this;
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* 请求后台获取本note的内容 */
-    qcloud.request({
-      url: `${host}/weapp/getNoteContext?openID=${options.openID}&noteID=${options.noteID}&noteTitle=${options.noteTitle}&noteDate=${options.noteDate}&hasThisNote=${options.hasThisNote}`,
+    wx.request({
+      url: `${host}/weapp/getNoteContext`,
+      data: {
+        openID: options.openID,
+        noteID: options.noteID,
+        noteTitle: options.noteTitle,
+        noteDate: options.noteDate,
+        hasThisNote: options.hasThisNote
+      },
       success: function (response) {
-        console.log(response.data.data);
+        console.log(response.data.context);
+        var context = decodeURIComponent(response.data.context);
         that.setData({
-          context: decodeURIComponent(response.data.data.context)
+          context: context,
         });
+
+        // 如果文章内容不是默认的则渲染
+        if (context !== "# " + options.noteTitle){  
+          that.changeModel();
+        }
+
+        // 关闭加载中提示
+        wx.hideLoading();
       },
       fail: function (err) {
         console.log(err);
@@ -53,7 +72,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+      
   },
 
   /**
@@ -75,14 +94,19 @@ Page({
    */
   onUnload: function () {
     var context = encodeURIComponent(this.data.context);
-    console.log(context);
+    var noteID = this.data.options.noteID;
+    console.log("noteID: " + noteID + " context: " + context);
     var that = this;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* 更新数据库 */
-    qcloud.request({
-      url: host + '/weapp/updateNoteContext?noteID=' + that.data.options.noteID + "&noteContext=" + context,
+    wx.request({
+      url: `${host}/weapp/updateNoteContext`,
+      data: {
+        noteID: noteID,
+        noteContext: context
+      },
       success: function (response) {
-        console.log(response.data.data.context);
+        console.log(response.data.context);
       },
       fail: function (err) {
         console.log(err);
@@ -108,21 +132,36 @@ Page({
   },
 
   loadNotes: function () {
+    wx.showLoading({
+      title: '加载中',
+    });
+
     var that = this;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* 请求后台获取notes列表 */
     var notesNum,
       notes;
-    qcloud.request({
-      url: host + '/weapp/getNotesList?openID=' + that.data.options.noteID,
+    console.log(this.data.userInfo.openId);
+    wx.request({
+      url: `${host}/weapp/getNotesList`,
+      data: {
+        openID: that.data.userInfo.openId
+      },
       success: function (response) {
-        console.log(response.data.data.context);
-        notes = response.data.data.context;
+        console.log(response.data.context);
+        notes = response.data.context;
         notesNum = notes.length;
 
-        // app.globalData.notes = notes;
-        // app.globalData.notesNum = notesNum;
-        console.log(app.globalData.notes);
+        // 初始化notes数据
+        that.setData({
+          notes: notes,
+          notesNum: notesNum
+        });
+        app.globalData.notes = notes;
+        app.globalData.notesNum = notesNum;
+
+        // 关闭加载中提示
+        wx.hideLoading();
       },
       fail: function (err) {
         console.log(err);
@@ -140,18 +179,19 @@ Page({
       console.log(res.target)
     }
     return {
-      title: 'MarkNote',
+      title: 'Markdown便笺',
       path: 'pages/index/index'
     }
   },
 
-
+  // 用户输入时
   getValue: function(event){
     this.setData({
       context: event.detail.value
     });
   },
 
+  // 更改为预览/编辑页面
   changeModel: function(event){
     wx.showLoading({
       title: "加载中",
@@ -206,10 +246,14 @@ Page({
         }
 
         /* 请求后台更改标题 */
-        qcloud.request({
-          url: host + "/weapp/changeNoteTitle?noteID=" + that.data.options.noteID + "&noteTitle=" + that.data.newNoteTitle,
+        wx.request({
+          url: `${host}/weapp/changeNoteTitle`,
+          data: {
+            noteID: that.data.options.noteID,
+            noteTitle: that.data.newNoteTitle
+          },
           success: function (response) {
-            console.log(response.data.data.context);
+            console.log(response.data.context);
           },
           fail: function (err) {
             console.log(err);

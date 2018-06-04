@@ -28,7 +28,7 @@ Page({
       console.log(res.target)
     }
     return {
-      title: 'MarkNote',
+      title: 'Markdown便笺',
       path: 'pages/index/index'
     }
   },
@@ -43,7 +43,7 @@ Page({
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
-      })
+      });
     } 
 
     var that = this;
@@ -73,11 +73,14 @@ Page({
     var notesNum,
       notes;
     console.log(this.data.userInfo.openId);
-    qcloud.request({
-      url: host + '/weapp/getNotesList?openID=' + that.data.userInfo.openId,
+    wx.request({
+      url: `${host}/weapp/getNotesList`,
+      data: {
+        openID: that.data.userInfo.openId
+      },
       success: function (response) {
-        console.log(response.data.data.context);
-        notes = response.data.data.context;
+        console.log(response.data.context);
+        notes = response.data.context;
         notesNum = notes.length;
 
         // 初始化notes数据
@@ -87,6 +90,9 @@ Page({
         });
         app.globalData.notes = notes;
         app.globalData.notesNum = notesNum;
+
+        // 关闭加载中提示
+        wx.hideLoading();
       },
       fail: function (err) {
         console.log(err);
@@ -113,6 +119,10 @@ Page({
   },
 
   getUserInfo: function(e) {
+    wx.showLoading({
+      title: '加载中',
+    });
+
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
@@ -231,10 +241,13 @@ Page({
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* 请求后台从数据库中删除这个note */
-    qcloud.request({
-      url: host + '/weapp/deleteNoteById?noteID=' + id,
+    wx.request({
+      url: `${host}/weapp/deleteNoteById`,
+      data: {
+        noteID: id
+      },
       success: function (response) {
-        console.log(response.data.data.context);
+        console.log(response.data.context);
       },
       fail: function (err) {
         console.log(err);

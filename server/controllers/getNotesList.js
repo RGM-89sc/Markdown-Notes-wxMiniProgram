@@ -1,23 +1,28 @@
-const { mysql } = require('../qcloud');
+var marknote = require('../libs/mksql');
 
 module.exports = async ctx => {
-  var originalUrl = ctx.originalUrl;
+  ctx.body = {
+    openID: ctx.request.query.openID
+  };
 
-  var re_openID = new RegExp("openID=(\.+)", "g"),
-    openID = re_openID.exec(originalUrl)[1];
+  if (ctx.body.openID) {
+    var count = await marknote('userData').where({ openID: ctx.body.openID }).select("noteID", "noteTitle", "noteDate").orderBy('noteDate', 'desc');
 
-  var count = await mysql('userData').where({ openID: openID }).select("noteID", "noteTitle", "noteDate").orderBy('noteDate', 'desc');
-
-  var notesList = [];
-  count.forEach(function(value){
-    notesList.push({
-      id: value.noteID,
-      title: decodeURI(value.noteTitle),
-      date: value.noteDate
+    var notesList = [];
+    count.forEach(function (value) {
+      notesList.push({
+        id: value.noteID,
+        title: decodeURI(value.noteTitle),
+        date: value.noteDate
+      });
     });
-  });
 
-  ctx.state.data = {
-    context: notesList
+    ctx.body = {
+      context: notesList
+    };
+  } else {  // 如果没有这些参数，那么有可能是直接调用了接口，不允许
+    ctx.body = {
+      context: "缺少参数"
+    };
   }
 }

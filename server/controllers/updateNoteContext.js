@@ -1,17 +1,20 @@
-const { mysql } = require('../qcloud');
+var marknote = require('../libs/mksql');
 
 module.exports = async ctx => {
-  var originalUrl = ctx.originalUrl;
+  ctx.body = {
+    noteID: ctx.request.query.noteID,
+    noteContext: ctx.request.query.noteContext
+  };
 
-  var re_noteID = new RegExp("noteID=(\.+)&", "g"),
-    id = re_noteID.exec(originalUrl)[1];
+  // if (ctx.body.openID) {
+    await marknote('userData').update({ noteContext: ctx.body.noteContext }).where({ noteID: ctx.body.noteID });
 
-  var re_noteContext = new RegExp("noteContext=(\.+)", "g"),
-    context = re_noteContext.exec(originalUrl)[1];
-
-  await mysql('userData').update({ noteContext: context }).where({ noteID: id });
-
-  ctx.state.data = {
-    context: decodeURIComponent(context)
-  }
+    ctx.body = {
+      context: decodeURIComponent(ctx.body.noteContext)
+    };
+  // } else {  // 如果没有这些参数，那么有可能是直接调用了接口，不允许
+  //   ctx.body = {
+  //     context: "缺少参数"
+  //   };
+  // }
 }

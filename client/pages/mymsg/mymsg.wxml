@@ -14,7 +14,7 @@
     <view class="{{touchAbout ? 'about-on' : 'about-off'}}" bindtap="about" hover-class="bg_gray">
       <text class="about-title">关于</text>
       <view wx:if="{{touchAbout}}" class="about-context">
-        <text>MarkNote是一个支持markdown语法的记事型小程序</text>
+        <text>“Markdown便笺”是一个支持markdown语法的记事型小程序</text>
       </view>
     </view>
   </view>

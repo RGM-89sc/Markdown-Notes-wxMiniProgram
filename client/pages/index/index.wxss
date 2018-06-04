@@ -79,15 +79,15 @@
 /* 便笺 */
  .note{
   margin: 35rpx;
-  padding: 15rpx 25rpx;
+  padding: 15rpx 20rpx;
   min-height: 120rpx;
   background-color: white;
-  border-radius: 20rpx;
+  border-radius: 15rpx;
 } 
 /* 便笺的标题 */
  .note-title{
-  font-size: 35rpx;
-  line-height: 60rpx;
+  font-size: 36rpx;
+  line-height: 70rpx;
 } 
 /* 便笺的创建时间 */
  .note-date{
